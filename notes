@@ -1,0 +1,20 @@
+=============File Content starts======================
+Python
+executable_path has been deprecated, please pass in a Service object
+In Selenium 4, you’ll need to set the driver’s executable_path from a Service object to prevent deprecation warnings. (Or don’t set the path and instead make sure that the driver you need is on the System PATH.)
+
+Before
+from selenium import webdriver
+options = webdriver.ChromeOptions()
+options.add_experimental_option("excludeSwitches", ["enable-automation"])
+options.add_experimental_option("useAutomationExtension", False)
+driver = webdriver.Chrome(executable_path=CHROMEDRIVER_PATH, options=options)
+After
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service as ChromeService
+options = webdriver.ChromeOptions()
+options.add_experimental_option("excludeSwitches", ["enable-automation"])
+options.add_experimental_option("useAutomationExtension", False)
+service = ChromeService(executable_path=CHROMEDRIVER_PATH)
+driver = webdriver.Chrome(service=service, options=options)
+=============File Content ends======================
