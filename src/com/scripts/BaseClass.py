@@ -1,7 +1,12 @@
+import time
+
+
 from selenium import webdriver
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support import expected_conditions
+from selenium.webdriver.support.wait import WebDriverWait
 
 
 class BaseClass:
@@ -11,6 +16,7 @@ class BaseClass:
         self.driver.get("https://www.google.com")
         self.driver.implicitly_wait(10)
         print(self.driver.title)
+        time.sleep(10)
 
     def quit(self):
         self.driver.close()
@@ -34,6 +40,14 @@ class BaseClass:
 
     def click(self, ele):
         self.ele.click()
+
+    def is_element_clickable(self, element, time_out):
+        wait = WebDriverWait(self.driver, time_out)
+        return wait.until(expected_conditions.element_to_be_clickable(element))
+
+    def is_element_visible(self, by, value, time_out):
+        wait = WebDriverWait(self.driver, time_out)
+        return wait.until(expected_conditions.visibility_of_element_located(by, value))
 
 
 # bc = BaseClass()
