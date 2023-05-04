@@ -8,20 +8,10 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
 
+from src.com.framework.BaseSetup import BaseSetup
 
-class BaseClass:
 
-    def __init__(self):
-        self.driver = webdriver.Chrome()
-        self.driver.get("https://www.google.com")
-        self.driver.implicitly_wait(10)
-        print(self.driver.title)
-        time.sleep(10)
-
-    def quit(self):
-        self.driver.close()
-        self.driver.quit()
-        print("close and quit driver")
+class BaseClass(BaseSetup):
 
     def get_driver(self):
         return self.driver
@@ -35,7 +25,7 @@ class BaseClass:
             case default:
                 return None
 
-    def clic_element(self, ele):
+    def click_element(self, ele):
         self.ele.click()
 
     def click(self, ele):
