@@ -19,6 +19,9 @@ class BaseSetup(unittest.TestCase):
         self.driver.quit()
         print("driver instance terminated")
 
+    def test_method(self):
+        print("method")
+
 # if __name__ == '__main__':
 #     unittest.main()
 
