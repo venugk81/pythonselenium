@@ -24,8 +24,10 @@ class BaseClass(unittest.TestCase):
             print(exp)
 
     def tearDown(self):
-        self.driver.quit()
-        print("driver is terminated..................")
+        if self.driver is not None:
+            print("driver instance is not none.. Terminating the driver instance..")
+            self.driver.quit()
+            print("driver is terminated..................")
 
     def test_method1(self):
         print("--------test Method print-------")
@@ -46,13 +48,15 @@ class BaseClass(unittest.TestCase):
             for index, row in self.df_scenarios.iterrows():
                 print(row["Scenario Name"], row["Execute"], row['URL'])
 
+
                 self.driver = webdriver.Chrome()
+                print("==========is driver none ?? ", self.driver is None)
                 self.driver.get(row['URL'])
                 self.driver.implicitly_wait(10)
                 print(self.driver.title)
                 print("driver is initialized..")
-
-
+                self.driver.close()
+                print("Closing driver instance..")
         except Exception as err:
             print("Exception:", err)
 
