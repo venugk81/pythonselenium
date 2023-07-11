@@ -8,6 +8,7 @@ class BaseClass(unittest.TestCase):
     def setUp(self):
         self.filepath = 'C:\\pythonprojs\\data\\data_sheet.xlsx'
         self.out_file_path = 'C:\\pythonprojs\\data\\data_sheet2.xlsx'
+        self.out_file_path3 = 'C:\\pythonprojs\\data\\data_sheet3.xlsx'
         try:
             self.df = pd.read_excel(self.filepath, sheet_name=None)
             self.keys = self.df.keys()
