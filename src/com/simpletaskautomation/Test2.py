@@ -9,8 +9,9 @@ class SecondTest(BasePage):
         self.execute_script()
 
     def tearDown(self):
-        print("tear down closed.")
-        self.driver.quit()
+        print(" tear down..")
+        # print("tear down closed.")
+        # self.driver.quit()
 
 
 if __name__ == '__main__':
