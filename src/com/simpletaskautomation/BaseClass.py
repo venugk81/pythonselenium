@@ -20,11 +20,11 @@ class BaseClass(unittest.TestCase):
             self.df_scenarios = self.df.get("Scenarios_copy")
             self.df_scenarios = self.df_scenarios[self.df_scenarios["Execute"].str.contains("Y")]
             print("scenarios: \n", self.df_scenarios)
-            self.df_scenarios.to_excel(self.out_file_path, sheet_name="Scenarios_copy", index=False, header=True)
+            # self.df_scenarios.to_excel(self.out_file_path, sheet_name="Scenarios_copy", index=False, header=True)
             # print(self.df)
         except Exception as exp:
             print(exp)
 
-
-
+    def tearDown(self):
+        print(" tear down..")
 

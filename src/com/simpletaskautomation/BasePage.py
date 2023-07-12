@@ -109,6 +109,15 @@ class BasePage(BaseClass):
                 case "sendkeys":
                     self.sendkeys(df_test)
                     blnFlag = "Pass"
+                case "selectbyvalue" | "select by value":
+                    print("implement select by value")
+                    blnFlag = "In Progress"
+                case "selectbyindex":
+                    print("implement select by index")
+                    blnFlag = "In Progress"
+                case "selectbytext":
+                    print("implement select by text")
+                    blnFlag = "In Progress"
         except Exception as exp:
             print("Failed to perform action on element: ", df_test)
             raise
