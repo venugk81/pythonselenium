@@ -1,5 +1,6 @@
 import time
 
+import numpy as np
 from selenium.webdriver.common.by import By
 from src.com.simpletaskautomation.BaseClass import BaseClass
 from selenium.webdriver.support import expected_conditions
@@ -9,6 +10,9 @@ from pandas import ExcelWriter
 
 
 class BasePage(BaseClass):
+
+    if_block=''
+    idict = {}
 
     def get_driver(self, url):
         try:
@@ -71,12 +75,26 @@ class BasePage(BaseClass):
         return wait.until(expected_conditions.element_to_be_clickable(element))
 
     def is_element_visible(self, by, value, time_out):
-        wait = WebDriverWait(self.driver, time_out)
-        return wait.until(expected_conditions.visibility_of_element_located((by, value)))
+        ele=None
+        try:
+            wait = WebDriverWait(self.driver, time_out)
+            ele = wait.until(expected_conditions.visibility_of_element_located((by, value)))
+        except Exception as err:
+            print("Element is not found: ", err)
+        finally:
+            return ele
+
 
     def get_element_by_xpath(self, locator_value):
-        wait = WebDriverWait(self.driver, 10)
-        return wait.until(expected_conditions.visibility_of_element_located((By.XPATH, locator_value)))
+
+        try:
+            wait = WebDriverWait(self.driver, 10)
+            ele = wait.until(expected_conditions.visibility_of_element_located((By.XPATH, locator_value)))
+            print("Element is visible in the DOM: ", locator_value)
+        except Exception as err:
+            print("Eelement is not visible in the DOM: ", err)
+        finally:
+            return ele
 
     def type_submit(self, df_row):
         # self.driver.find_element(By.XPATH, df_row['xpath']).send_keys(df_row['Data'])
@@ -135,15 +153,23 @@ class BasePage(BaseClass):
                     test_sheet_name = row["SheetName"]
                     print("execute test steps for ", test_sheet_name)
                     self.df_sheet = self.df.get(test_sheet_name)
-
-                    self.df_sheet = self.df_sheet[self.df_sheet["Execute"].str.contains("Y")]
+                    print(self.df_sheet)
+                    ### https://datatofish.com/replace-nan-values-with-zeros/
+                    self.df_sheet = self.df_sheet.fillna("")
+                    print(self.df_sheet)
+                    ### https://www.statology.org/cannot-mask-with-non-boolean-array-containing-na-nan-values/
+                    self.df_sheet = self.df_sheet[self.df_sheet["Execute"].str.contains("Y").fillna(False)]
                     print("Test cases: \n", self.df_sheet)
                     # Test Tabs iteration
-                    for index1, row1 in self.df_sheet.iterrows():
-                        print(row1["Step"], row1["Action"], row1['xpath'], row1['Data'])
-                        # self.df_sheet.at[index1, 'Status'] = "Pass"
-                        print("row1['Status']:", row1["Status"])
-                        self.perform_actions(index1, row1)
+                    try:
+                        for index1, row1 in self.df_sheet.iterrows():
+                            print(row1["Step"], row1["Action"], row1['xpath'], row1['Data'])
+                            # self.df_sheet.at[index1, 'Status'] = "Pass"
+                            print("row1['Status']:", row1["Status"])
+                            self.perform_actions(index1, row1)
+                    except Exception as loop_err:
+                        print("Error from the loop:", loop_err)
+                        raise
                 except Exception as exp:
                     print("Exception Occurred1: ", exp)
 
@@ -160,4 +186,22 @@ class BasePage(BaseClass):
                 self.driver.quit()
                 print("quit driver..")
 
+
+    def if_exists(self, df_row):
+        flag = False
+        self.idict[df_row['capture']] = False
+        try:
+            ele = self.get_element_by_xpath(df_row['xpath'])
+            if ele.is_displayed():
+                self.idict[df_row['capture']] = flag
+                flag = True
+        except Exception as exp:
+            print("Element is not found in the DOM ", exp)
+            raise
+        finally:
+            return flag
+
+
+    def execute_condition_block(self, df_test):
+        strVal = self.if_block + self.if_exists(df_test)
 
